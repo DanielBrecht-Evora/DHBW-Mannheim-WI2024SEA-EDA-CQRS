@@ -2,17 +2,11 @@ from ..handlers.auction_handler import AuctionHandler, AuctionState
 
 
 class AuctionQueries:
-    """
-    CQRS - Query-Seite: Nur lesende Abfragen, keine Zustandsänderungen.
-
-    Queries greifen auf den aktuellen Zustand zu, ändern aber nichts.
-    """
 
     def __init__(self, auction_handler: AuctionHandler):
         self._auction_handler = auction_handler
 
     def get_current_highest_bid(self, auction_id: str) -> dict:
-        """Gibt das aktuelle Höchstgebot einer Auktion zurück."""
         auction = self._auction_handler.get_auction_state(auction_id)
 
         if auction is None:
@@ -27,7 +21,6 @@ class AuctionQueries:
         }
 
     def get_bid_history(self, auction_id: str) -> list[dict]:
-        """Gibt die komplette Gebotshistorie einer Auktion zurück."""
         auction = self._auction_handler.get_auction_state(auction_id)
 
         if auction is None:
@@ -39,7 +32,6 @@ class AuctionQueries:
         ]
 
     def get_all_active_auctions(self) -> list[dict]:
-        """Gibt alle aktiven Auktionen zurück."""
         return [
             {
                 "auction_id": a.auction_id,

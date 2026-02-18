@@ -4,7 +4,6 @@ from ..core.event_bus import EventBus
 
 
 class AuctionState:
-    """Hält den aktuellen Zustand einer Auktion im Speicher."""
 
     def __init__(self, auction_id: str, title: str, starting_price: float):
         self.auction_id = auction_id
@@ -16,14 +15,6 @@ class AuctionState:
 
 
 class AuctionHandler:
-    """
-    PRODUCER: Verarbeitet Commands und publiziert daraus Events.
-
-    Dieser Handler kennt die Geschäftslogik:
-    - Ist das Gebot hoch genug?
-    - Gibt es die Auktion überhaupt?
-    - Ist die Auktion noch aktiv?
-    """
 
     def __init__(self, event_bus: EventBus):
         self._event_bus = event_bus
@@ -59,14 +50,12 @@ class AuctionHandler:
         auction.current_price = command.amount
         auction.current_bidder = command.bidder_name
 
-        # Event 1: Neues Gebot wurde abgegeben
         self._event_bus.publish(BidPlaced(
             auction_id=command.auction_id,
             bidder_name=command.bidder_name,
             amount=command.amount,
         ))
 
-        # Event 2: Vorheriger Bieter wurde überboten (nur wenn es einen gab)
         if previous_bidder is not None:
             self._event_bus.publish(BidBeaten(
                 auction_id=command.auction_id,
@@ -92,9 +81,7 @@ class AuctionHandler:
         ))
 
     def get_auction_state(self, auction_id: str) -> AuctionState | None:
-        """Für Query-Handler: gibt den aktuellen Zustand einer Auktion zurück."""
         return self._auctions.get(auction_id)
 
     def get_all_auctions(self) -> list[AuctionState]:
-        """Für Query-Handler: gibt alle Auktionen zurück."""
         return list(self._auctions.values())

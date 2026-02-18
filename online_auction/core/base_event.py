@@ -4,5 +4,4 @@ from datetime import datetime
 
 @dataclass
 class BaseEvent:
-    """Basisklasse für alle Events im System."""
     occurred_at: datetime = field(default_factory=datetime.now)

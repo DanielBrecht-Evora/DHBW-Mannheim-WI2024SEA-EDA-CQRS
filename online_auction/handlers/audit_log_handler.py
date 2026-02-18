@@ -5,13 +5,6 @@ LOG_FILE = "auction_audit.log"
 
 
 class AuditLogHandler:
-    """
-    CONSUMER: Schreibt alle Events in eine Log-Datei.
-
-    Völlig unabhängig vom NotificationHandler —
-    beide reagieren auf dieselben Events ohne voneinander zu wissen.
-    Das ist der Kern von EDA: ein Event, beliebig viele Reaktionen.
-    """
 
     def on_auction_created(self, event: AuctionCreated) -> None:
         self._write(f"AUCTION_CREATED | id={event.auction_id} | title={event.title} | start={event.starting_price:.2f}€")

@@ -5,7 +5,6 @@ from ..core.base_event import BaseEvent
 
 @dataclass
 class AuctionCreated(BaseEvent):
-    """Event: Eine neue Auktion wurde erstellt."""
     auction_id: str = ""
     title: str = ""
     starting_price: float = 0.0

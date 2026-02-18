@@ -2,12 +2,6 @@ from ..events import AuctionCreated, BidPlaced, BidBeaten, AuctionEnded
 
 
 class NotificationHandler:
-    """
-    CONSUMER: Reagiert auf Events und gibt Benachrichtigungen aus.
-
-    Dieser Handler weiß nichts von Commands oder Geschäftslogik.
-    Er empfängt nur Events und reagiert darauf.
-    """
 
     def on_auction_created(self, event: AuctionCreated) -> None:
         print(f"\n  [NEU] Auktion gestartet: '{event.title}'")

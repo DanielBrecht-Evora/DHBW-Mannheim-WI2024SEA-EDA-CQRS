@@ -4,7 +4,6 @@ from ..core.base_event import BaseEvent
 
 @dataclass
 class AuctionEnded(BaseEvent):
-    """Event: Eine Auktion wurde beendet."""
     auction_id: str = ""
     title: str = ""
     winner_name: str = ""

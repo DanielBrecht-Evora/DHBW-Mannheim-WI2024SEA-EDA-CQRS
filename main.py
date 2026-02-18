@@ -1,16 +1,3 @@
-"""
-Online-Auktionssystem - Demo
-EDA (Event-Driven Architecture) mit CQRS (Command Query Responsibility Segregation)
-
-Ablauf:
-  1. Commands werden an den AuctionHandler (Producer) geschickt
-  2. Der Handler publiziert Events über den EventBus
-  3. Zwei unabhängige Consumer empfangen dieselben Events:
-     - NotificationHandler: gibt Meldungen im Terminal aus
-     - AuditLogHandler:     schreibt alle Events in auction_audit.log
-  4. Queries lesen den aktuellen Zustand, ohne ihn zu verändern
-"""
-
 from datetime import datetime, timedelta
 
 from online_auction.core import EventBus
@@ -21,20 +8,17 @@ from online_auction.queries import AuctionQueries
 
 
 def setup_system() -> tuple[AuctionHandler, AuctionQueries]:
-    """Baut das System zusammen und verbindet Producer mit Consumern über den EventBus."""
     event_bus = EventBus()
     auction_handler = AuctionHandler(event_bus)
     notification_handler = NotificationHandler()
     audit_log_handler = AuditLogHandler()
     queries = AuctionQueries(auction_handler)
 
-    # Consumer 1: Benachrichtigungen im Terminal
     event_bus.subscribe(AuctionCreated, notification_handler.on_auction_created)
     event_bus.subscribe(BidPlaced,      notification_handler.on_bid_placed)
     event_bus.subscribe(BidBeaten,      notification_handler.on_bid_beaten)
     event_bus.subscribe(AuctionEnded,   notification_handler.on_auction_ended)
 
-    # Consumer 2: Audit-Log in Datei (unabhängig von Consumer 1)
     event_bus.subscribe(AuctionCreated, audit_log_handler.on_auction_created)
     event_bus.subscribe(BidPlaced,      audit_log_handler.on_bid_placed)
     event_bus.subscribe(BidBeaten,      audit_log_handler.on_bid_beaten)
@@ -49,8 +33,6 @@ def demo_auction():
     print("=" * 55)
     print("     ONLINE-AUKTIONSSYSTEM - EDA mit CQRS")
     print("=" * 55)
-
-    # --- COMMANDS (schreibend) ---
 
     print("\n--- Auktionen erstellen ---")
     auction_handler.handle_create_auction(CreateAuction(
@@ -72,8 +54,6 @@ def demo_auction():
     auction_handler.handle_place_bid(PlaceBid("auktion-001", "Alice",   700.00))
     auction_handler.handle_place_bid(PlaceBid("auktion-002", "Charlie", 350.00))
 
-    # --- QUERIES (lesend) ---
-
     print("\n\n--- QUERY: Aktueller Status ---")
     status = queries.get_current_highest_bid("auktion-001")
     print(f"  '{status['title']}': Höchstgebot {status['current_price']:.2f}€ von {status['current_bidder']}")
@@ -85,8 +65,6 @@ def demo_auction():
     print("\n--- QUERY: Gebotshistorie ---")
     for bid in queries.get_bid_history("auktion-001"):
         print(f"  {bid['bidder']:10} → {bid['amount']:.2f}€")
-
-    # --- COMMANDS: Auktionen beenden ---
 
     print("\n--- Auktionen beenden ---")
     auction_handler.handle_end_auction(EndAuction("auktion-001"))
