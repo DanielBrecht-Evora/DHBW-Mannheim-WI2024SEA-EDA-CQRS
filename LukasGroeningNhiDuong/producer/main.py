@@ -16,7 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def get_rabbitmq_connection():
+def get_rabbitmq_connection() -> pika.BlockingConnection:
     return pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
 
 @app.post("/press_button")
