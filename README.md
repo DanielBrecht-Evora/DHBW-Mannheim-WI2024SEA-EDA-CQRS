@@ -18,7 +18,7 @@ Dieses Projekt ermöglicht das Steuern einer TP‑Link Tapo L530E Smart‑Glühb
 - Alle Geräte (Laptop, Glühbirne, Smartphone) müssen im selben WLAN sein
 - Installation aller Pakete aus requirements.txt
 - [Installation von RabbitMQ](https://www.rabbitmq.com/docs/download) und [Erlang OTP](https://www.erlang.org/downloads)
-- vor Start von consumer.py oder producer.py RabbitMQ server lokal starten
+- vor Start von consumer.py und producer.py RabbitMQ server lokal starten
 
 ---
 
@@ -56,5 +56,3 @@ Gehe zu den Geräteeinstellungen.
 Notiere die dort angezeigte IP-Adresse der Glühbirne.
 
 5. In Consumer.py die Anmeldedaten und Ip Adresse eintragen.
-
-...
